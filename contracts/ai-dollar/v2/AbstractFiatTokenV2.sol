@@ -1,4 +1,3 @@
-
 pragma solidity 0.6.12;
 
 import { AbstractFiatTokenV1 } from "../v1/AbstractFiatTokenV1.sol";

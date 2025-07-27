@@ -1,4 +1,3 @@
-
 pragma solidity 0.6.12;
 
 import { EIP712Domain } from "./EIP712Domain.sol"; // solhint-disable-line no-unused-import

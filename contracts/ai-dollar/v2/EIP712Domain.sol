@@ -1,4 +1,3 @@
-
 pragma solidity 0.6.12;
 
 // solhint-disable func-name-mixedcase

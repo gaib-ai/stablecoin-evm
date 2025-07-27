@@ -1,4 +1,3 @@
-
 pragma solidity 0.6.12;
 
 import { FiatTokenV2_2 } from "./v2/FiatTokenV2_2.sol";
