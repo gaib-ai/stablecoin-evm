@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/circlefin/stablecoin-evm#readme",
   "devDependencies": {
+    "@layerzerolabs/oft-evm-upgradeable": "^3.1.0",
     "@nomicfoundation/hardhat-chai-matchers": "2.0.2",
     "@nomicfoundation/hardhat-ethers": "3.0.4",
     "@nomicfoundation/hardhat-foundry": "1.1.1",

@@ -19,27 +19,28 @@
 pragma solidity 0.6.12;
 
 import { FiatTokenV2_2 } from "./v2/FiatTokenV2_2.sol";
-import { OFT } from "@layerzerolabs/lz-evm-oapp-v2/contracts/oft/OFT.sol";
+import { OFTCoreUpgradeable } from "@layerzerolabs/oft-evm-upgradeable/contracts/oft/OFTCoreUpgradeable.sol";
 
 // solhint-disable func-name-mixedcase
 
 /**
  * @title AID
  */
-contract AID is FiatTokenV2_2, OFT {
+contract AID is FiatTokenV2_2, OFTCoreUpgradeable {
+
+    constructor(address _lzEndpoint) public OFTCoreUpgradeable(6, _lzEndpoint) {}
 
     /**
      * @notice Initialize the OFT functionality
-     * @param _lzEndpoint The LayerZero endpoint address.
      * @param _admin The address of the admin.
      */
-    function initializeOFT(address _lzEndpoint, address _admin) external {
+    function __OFT_init(address _admin) external {
         // solhint-disable-next-line reason-string
         require(
             owner() == msg.sender,
             "AID: Caller is not the owner"
         );
-        OFT._initialize(_lzEndpoint, _admin);
+        __OFTCore_init(_admin);
     }
 
     function sharedDecimals() public override pure returns (uint8) {
@@ -54,11 +55,12 @@ contract AID is FiatTokenV2_2, OFT {
         uint32 _dstEid
     )
         internal
-        override
+        override(OFTCoreUpgradeable)
         whenNotPaused
         returns (uint256 amountSentLD, uint256 amountReceivedLD)
     {
-        return super._debit(_from, _amountLD, _minAmountLD, _dstEid);
+        (amountSentLD, amountReceivedLD) = _debitView(_amountLD, _minAmountLD, _dstEid);
+        _burn(_from, amountSentLD);
     }
 
     // override to allow pausing
@@ -66,7 +68,8 @@ contract AID is FiatTokenV2_2, OFT {
         address _to,
         uint256 _amountLD,
         uint32 _srcEid
-    ) internal override whenNotPaused returns (uint256 amountReceivedLD) {
-        return super._credit(_to, _amountLD, _srcEid);
+    ) internal override(OFTCoreUpgradeable) whenNotPaused returns (uint256 amountReceivedLD) {
+        _mint(_to, _amountLD);
+        return _amountLD;
     }
 }
